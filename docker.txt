@@ -1,0 +1,35 @@
+FROM node:20.10.0 as builder
+
+WORKDIR /usr/src/app
+
+COPY package*.json yarn.lock ./
+
+RUN yarn install
+
+COPY . .
+
+RUN yarn build
+
+ENV NODE_ENV=development
+ENV IS_MASTER=true
+
+RUN echo "Running in $NODE_ENV environment, Master: $IS_MASTER"
+
+EXPOSE 3000
+
+
+
+
+CMD ["node", "dist/main"]
+
+
+----
+
+# add git-ignore syntax here of things you don't want copied into docker image
+
+.git
+*Dockerfile*
+*docker-compose*
+node_modules
+dist
+npm-debug.log
